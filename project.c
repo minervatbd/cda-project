@@ -52,7 +52,15 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 /* 10 Points */
 void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
 {
+    *op = getBits(instruction, 26, 31);
+    *r1 = getBits(instruction, 21, 25);
+    *r2 = getBits(instruction, 16, 20);
+    *r3 = getBits(instruction, 11, 15);
+    *funct = getBits(instruction, 0, 5);
+    *offset = getBits(instruction, 0, 15);
+    *jsec = getBits(instruction, 0, 25);
 
+    return;
 }
 
 /* Instruction Decode */
