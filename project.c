@@ -1,5 +1,8 @@
 #include "spimcore.h"
 
+// prototype for getbits function 
+unsigned getBits(unsigned num, unsigned start, unsigned end);
+
 /* ALU */
 void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
 {
@@ -56,11 +59,13 @@ void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigne
 /* 10 Points */
 void sign_extend(unsigned offset,unsigned *extended_value)
 {
-    unsigned direction = ((1 << 15) & offset) >> 15;
+    unsigned direction = getBits(offset, 15, 15);
     if (direction) {
+        
+    }
+    else {
 
     }
-    else printf("f");
 }
 
 /* ALU Operations */
@@ -120,9 +125,16 @@ void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char 
 
 }
 
+// main function for testing stuff
+/*
 int main() {
-
-    sign_extend(0b11101010111001001110101011100100, NULL);
-    sign_extend(0b11101010111001000110101011100100, NULL);
+    unsigned test = 0b110010001110;
+    printf("%o %o %o", getBits(test, 0, 11), getBits(test, 6, 11), getBits(test, 0, 5));
 }
+*/
 
+// helper function that returns a certain interval of bits [start, end] from num 
+unsigned getBits(unsigned num, unsigned start, unsigned end) {
+    unsigned mask = (1 << (end - start + 1)) - 1;
+    return (num >> start) & mask;
+}
