@@ -52,7 +52,7 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 /* 10 Points */
 void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
 {
-    
+
 }
 
 /* Instruction Decode */
@@ -79,11 +79,11 @@ void sign_extend(unsigned offset,unsigned *extended_value)
     unsigned extender = getBits(offset, 15, 15);
     if (extender) {
         // fill first 16 bits with 1
-        *extended_value = (((1 << 16) - 1) << 16) | half;
+        *extended_value = 0xFFFF0000 | half;
     }
     else {
         // just return the first half
-        *extended_value = half;
+        *extended_value = 0x00000000 | half;
     }
     return;
 }
