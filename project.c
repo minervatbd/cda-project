@@ -31,14 +31,28 @@ void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 {
+    // fetch the instruction
+    *instruction = MEM(PC);
 
+    // check for halt conditions
+    int isHalt = 0;
+    
+    // if beyond range
+    if (PC < 0x0000 || PC > 0xFFFF)
+        isHalt = 1;
+    
+    // if its not word aligned
+    if (PC % 4 != 0)
+        isHalt = 1;
+    
+    return isHalt;
 }
 
 /* Instruction Partition */
 /* 10 Points */
 void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
 {
-
+    
 }
 
 /* Instruction Decode */
