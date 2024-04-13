@@ -237,6 +237,15 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
 void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char Zero,unsigned *PC)
 {
 
+    if (Branch && Zero)
+        PC += extended_value;
+    
+    else if (Jump)
+        PC += jsec;
+    
+    else
+        PC += 4;
+
 }
 
 // main function for testing stuff
