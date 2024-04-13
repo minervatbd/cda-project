@@ -3,6 +3,9 @@
 // prototype for getbits function 
 unsigned getBits(unsigned num, unsigned start, unsigned end);
 
+// prototype for is aligned function
+unsigned isAligned(unsigned addr);
+
 /* ALU */
 void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
 {
@@ -42,7 +45,7 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
         isHalt = 1;
     
     // if its not word aligned
-    if (PC % 4 != 0)
+    if (!isAligned(PC))
         isHalt = 1;
     
     return isHalt;
@@ -194,7 +197,19 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 /* 10 Points */
 int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem)
 {
-
+    if (MemRead) {
+        if (isAligned(ALUresult))
+            *memdata = MEM(ALUresult);
+        else
+            return 1;
+    }
+    if (MemWrite) {
+        if (isAligned(ALUresult))
+            MEM(ALUresult) = data2;
+        else
+            return 1;
+    }
+    return 0;
 }
 
 /* Write Register */
@@ -225,4 +240,10 @@ unsigned getBits(unsigned num, unsigned start, unsigned end) {
     unsigned mask = (1 << (end - start + 1)) - 1;
     // bitwise and it with the number thats been shifted right the appropriate amount
     return (num >> start) & mask;
+}
+
+unsigned isAligned(unsigned addr) {
+    if (addr % 4 == 0)
+        return 1;
+    return 0;
 }
