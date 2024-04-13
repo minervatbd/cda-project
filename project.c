@@ -59,12 +59,16 @@ void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigne
 /* 10 Points */
 void sign_extend(unsigned offset,unsigned *extended_value)
 {
+    // first half of the offset int
     unsigned half = getBits(offset, 0, 15);
+    // determines whether to extend with 1s or 0s
     unsigned extender = getBits(offset, 15, 15);
     if (extender) {
+        // fill first 16 bits with 1
         *extended_value = (((1 << 16) - 1) << 16) | half;
     }
     else {
+        // just return the first half
         *extended_value = half;
     }
     return;
@@ -137,6 +141,8 @@ int main() {
 
 // helper function that returns a certain interval of bits [start, end] from num 
 unsigned getBits(unsigned num, unsigned start, unsigned end) {
+    // create a mask by bitshifting 1 left the right amount and then subtracting one
     unsigned mask = (1 << (end - start + 1)) - 1;
+    // bitwise and it with the number thats been shifted right the appropriate amount
     return (num >> start) & mask;
 }
