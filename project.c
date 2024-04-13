@@ -59,13 +59,15 @@ void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigne
 /* 10 Points */
 void sign_extend(unsigned offset,unsigned *extended_value)
 {
-    unsigned direction = getBits(offset, 15, 15);
-    if (direction) {
-        
+    unsigned half = getBits(offset, 0, 15);
+    unsigned extender = getBits(offset, 15, 15);
+    if (extender) {
+        *extended_value = (((1 << 16) - 1) << 16) | half;
     }
     else {
-
+        *extended_value = half;
     }
+    return;
 }
 
 /* ALU Operations */
