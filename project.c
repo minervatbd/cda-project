@@ -67,7 +67,64 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 /* 30 Points */
 int instruction_decode(unsigned op,struct_controls *controls)
 {
+    
+    // defaults
+    controls->RegDst = 0;
+    controls->Jump = 0;
+    controls->Branch = 0;
+    controls->MemRead = 0;
+    controls->MemtoReg = 0;
+    controls->ALUOp = 0;
+    controls->MemWrite = 0;
+    controls->ALUSrc = 0;
+    controls->RegWrite = 0;
 
+    // r-type
+    if (op == 0) {
+        controls->RegDst = 1;
+        controls->ALUOp = 7;
+        controls->RegWrite = 1;
+    }
+    // lw
+    if (op == 35) {
+        controls->MemRead = 1;
+        controls->MemtoReg = 1;
+        controls->ALUSrc = 1;
+        controls->RegWrite = 1;
+    }
+    // sw
+    if (op == 43) {
+        controls->MemWrite = 1;
+        controls->ALUSrc = 1;
+    }
+    // beq
+    if (op == 4) {
+        controls->Branch = 1;
+        controls->ALUOp = 1;
+    }
+    // slti
+    if (op == 10) {
+        controls->ALUOp = 2;
+        controls->ALUSrc = 1;
+        controls->RegWrite = 1;
+    }
+    // sltiu
+    if (op == 11) {
+        controls->ALUOp = 3;
+        controls->ALUSrc = 1;
+        controls->RegWrite = 1;
+    }
+    // addi
+    if (op == 8) {
+        controls->ALUSrc = 1;
+        controls->RegWrite = 1;
+    }
+    // lui
+    if (op == 15) {
+        controls->ALUOp = 6;
+        controls->ALUSrc = 1;
+        controls->RegWrite = 1;
+    }
 }
 
 /* Read Register */
