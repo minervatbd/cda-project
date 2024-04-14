@@ -1,3 +1,13 @@
+/* 
+I have not used C language code obtained from other students, the
+Internet, and any other unauthorized sources, either modified or
+unmodified. If any code in my program was obtained from an authorized
+source, such as textbook or course notes, that has been clearly noted
+as a citation in the comments of the program
+*/
+// Mina Georgoudiou
+// mi343301@ucf.edu
+
 #include "spimcore.h"
 
 // prototype for getbits function 
@@ -128,6 +138,8 @@ int instruction_decode(unsigned op,struct_controls *controls)
         controls->ALUSrc = 1;
         controls->RegWrite = 1;
     }
+
+    return 0;
 }
 
 /* Read Register */
@@ -229,7 +241,7 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
             Reg[r2] = temp;
     }
     else
-        return 0;
+        return;
 }
 
 /* PC Update */
