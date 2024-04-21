@@ -138,6 +138,9 @@ int instruction_decode(unsigned op,struct_controls *controls)
         controls->ALUSrc = 1;
         controls->RegWrite = 1;
     }
+    if (op == 2) {
+        controls->Jump = 1;
+    }
 
     return 0;
 }
