@@ -65,6 +65,7 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 /* 10 Points */
 void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
 {
+    // utilize getbits function to split up the instruction
     *op = getBits(instruction, 26, 31);
     *r1 = getBits(instruction, 21, 25);
     *r2 = getBits(instruction, 16, 20);
@@ -80,7 +81,7 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 /* 30 Points */
 int instruction_decode(unsigned op,struct_controls *controls)
 {
-    
+
     // defaults
     controls->RegDst = 0;
     controls->Jump = 0;
@@ -138,13 +139,15 @@ int instruction_decode(unsigned op,struct_controls *controls)
         controls->ALUSrc = 1;
         controls->RegWrite = 1;
     }
+    // jump
     else if (op == 2) {
         controls->Jump = 1;
     }
+    // invalid opcode
     else {
         return 1;
     }
-
+    // otherwise, return false for ishalt
     return 0;
 }
 
@@ -215,13 +218,17 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 /* 10 Points */
 int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem)
 {
+    // reading mem
     if (MemRead) {
+        // test if aligned
         if (isAligned(ALUresult))
             *memdata = MEM(ALUresult);
         else
             return 1;
     }
+    // writing mem
     if (MemWrite) {
+        // test if aligned
         if (isAligned(ALUresult))
             MEM(ALUresult) = data2;
         else
@@ -236,13 +243,16 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
 {
     if (RegWrite) {
         unsigned temp;
+        // if memtoreg, the register will be updated using memdata
         if (MemtoReg)
             temp = memdata;
+        // otherwise its just the aluresult
         else
             temp = ALUresult;
-        //printf("%x %x %x %x %x %x %x\n", r2, r3, memdata, ALUresult, RegWrite, RegDst, MemtoReg);
+        // when regdst is true, update r3 (rd)
         if (RegDst)
             Reg[r3] = temp;
+        // otherwise, update r2 (rt)
         else
             Reg[r2] = temp;
     }
@@ -254,14 +264,17 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
 /* 15 Points */
 void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char Zero,unsigned *PC)
 {
-
+    // branch case
     if (Branch && Zero)
+        // branch address is calculated by adding 4 and extended_value leftshifted by 2 to the PC
         *PC += 4 + (extended_value << 2);
-    
+    // jump case
     else if (Jump)
+        // jump address is calculated by concatenating the left 4 bits of PC + 4 and jsec leftshifted by 2
         *PC = ((*PC + 4) & 0xF0000000) | (jsec << 2);
     
     else
+        // every other case is simply add 4 to PC
         *PC += 4;
 
 }
@@ -274,6 +287,7 @@ unsigned getBits(unsigned num, unsigned start, unsigned end) {
     return (num >> start) & mask;
 }
 
+// helper function that checks if an unsigned int is a multiple of 4
 unsigned isAligned(unsigned addr) {
     if (addr % 4 == 0)
         return 1;
