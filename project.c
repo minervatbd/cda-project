@@ -99,47 +99,50 @@ int instruction_decode(unsigned op,struct_controls *controls)
         controls->RegWrite = 1;
     }
     // lw
-    if (op == 35) {
+    else if (op == 35) {
         controls->MemRead = 1;
         controls->MemtoReg = 1;
         controls->ALUSrc = 1;
         controls->RegWrite = 1;
     }
     // sw
-    if (op == 43) {
+    else if (op == 43) {
         controls->MemWrite = 1;
         controls->ALUSrc = 1;
     }
     // beq
-    if (op == 4) {
+    else if (op == 4) {
         controls->Branch = 1;
         controls->ALUOp = 1;
     }
     // slti
-    if (op == 10) {
+    else if (op == 10) {
         controls->ALUOp = 2;
         controls->ALUSrc = 1;
         controls->RegWrite = 1;
     }
     // sltiu
-    if (op == 11) {
+    else if (op == 11) {
         controls->ALUOp = 3;
         controls->ALUSrc = 1;
         controls->RegWrite = 1;
     }
     // addi
-    if (op == 8) {
+    else if (op == 8) {
         controls->ALUSrc = 1;
         controls->RegWrite = 1;
     }
     // lui
-    if (op == 15) {
+    else if (op == 15) {
         controls->ALUOp = 6;
         controls->ALUSrc = 1;
         controls->RegWrite = 1;
     }
-    if (op == 2) {
+    else if (op == 2) {
         controls->Jump = 1;
+    }
+    else {
+        return 1;
     }
 
     return 0;
