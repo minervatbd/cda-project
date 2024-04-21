@@ -231,10 +231,10 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
     if (RegWrite) {
         unsigned temp;
         if (MemtoReg)
-            temp = ALUresult;
-        else
             temp = memdata;
-        
+        else
+            temp = ALUresult;
+        //printf("%x %x %x %x %x %x %x\n", r2, r3, memdata, ALUresult, RegWrite, RegDst, MemtoReg);
         if (RegDst)
             Reg[r3] = temp;
         else
@@ -250,23 +250,15 @@ void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char 
 {
 
     if (Branch && Zero)
-        PC += extended_value;
+        *PC += extended_value;
     
     else if (Jump)
-        PC += jsec;
+        *PC += jsec;
     
     else
-        PC += 4;
+        *PC += 4;
 
 }
-
-// main function for testing stuff
-/*
-int main() {
-    unsigned test = 0b110010001110;
-    printf("%o %o %o", getBits(test, 0, 11), getBits(test, 6, 11), getBits(test, 0, 5));
-}
-*/
 
 // helper function that returns a certain interval of bits [start, end] from num 
 unsigned getBits(unsigned num, unsigned start, unsigned end) {
